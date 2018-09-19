@@ -645,11 +645,17 @@ def create_edgeMatrix(X, X_cols, X_rows, verbose=True, G=None):
     if G is None:
         G = NdexGraph()
     G.unclassified_cx.append(
-        {'matrix': serialized,
-         'matrix_cols' : X_cols,
-         'matrix_rows' : X_rows,
-         'matrix_dtype' : X.dtype.name})
-    
+        {'matrix': [{'v': serialized}]})
+
+    G.unclassified_cx.append(
+        {'matrix_cols' : [{'v': X_cols}]})
+
+    G.unclassified_cx.append(
+        {'matrix_rows' : [{'v': X_rows}]})
+
+    G.unclassified_cx.append(
+        {'matrix_dtype' : [{'v': X.dtype.name}]})
+
     return G
 
 def load_edgeMatrix(ndex_uuid,

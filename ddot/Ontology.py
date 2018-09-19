@@ -1020,7 +1020,16 @@ class Ontology(object):
                           index=[x[0] for x in new_and_orig])
 
         # For duplicate nodes, set the Original_Name attribute to the name of the original node
-        merge = pd.merge(df, ont.node_attr, how='left', left_on=['orig_tmp'], right_index=True)
+        try:
+            merge = pd.merge(df, ont.node_attr, how='left', left_on=['orig_tmp'], right_index=True)
+        except Exception as e:
+            print('************************************************************************')
+            print('************************************************************************')
+            print('Couldn''t merge dataframes.  Try changing the alpha and beta parameters')
+            print('************************************************************************')
+            print('************************************************************************')
+            raise OverflowError('TRY CHANGING ALPHA AND BETA PARAMETERS')
+
         if 'Original_Name' in merge:
             unset = pd.isnull(merge['Original_Name']).values
             merge.loc[unset, 'Original_Name'] = df.loc[unset, 'orig_tmp'].values
@@ -3636,6 +3645,10 @@ class Ontology(object):
                     v_size = v_data['Vis:Size']
                     for u in G.predecessors(v):                        
                         u_size = G.node[u]['Vis:Size']
+                        if u == 'KCNB2' or v == 'KCNB2':
+                            print('found it')
+                        #if pos.get(v) is None or pos.get(u) is None:
+                        #    dist =
                         dist = math.sqrt(sum([(a-b)**2 for a, b in zip(pos[v], pos[u])]))
                         if dist > 0:
                             ratio = ((v_size + u_size) / 2.) / dist
